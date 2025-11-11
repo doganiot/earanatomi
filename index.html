@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kulak Kalıbı Anatomik Bölge Tespiti</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦻 Kulak Kalıbı Anatomik Analiz Sistemi</h1>
+            <p class="subtitle">İşitme Merkezi Kulak Kalıplarının Anatomik Bölgelerini Tespit Edin ve Etiketleyin</p>
+        </header>
+
+        <div class="info-panel">
+            <div class="info-box">
+                <h3>ℹ️ Önemli Bilgi</h3>
+                <p><strong>Kulak kalıbı, gerçek kulağın negatifidir (ters kalıbıdır).</strong></p>
+                <p>Bu uygulamada kulak kalıplarının anatomik bölgelerini işaretleyebilir, hataları belirtebilir ve doğru etiketlemeler yapabilirsiniz.</p>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Sol Panel: Araçlar ve Kontroller -->
+            <div class="left-panel">
+                <div class="tool-section">
+                    <h2>📁 Görsel Yükle</h2>
+                    <div class="upload-area">
+                        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                        <button id="uploadBtn" class="btn btn-primary">
+                            <span>📤 Kulak Kalıbı Görseli Yükle</span>
+                        </button>
+                        <div id="imageInfo" class="image-info"></div>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h2>🎨 Anatomik Bölgeler</h2>
+                    <div class="anatomy-list">
+                        <div class="anatomy-category">
+                            <h4>Ana Yapılar</h4>
+                            <button class="anatomy-btn" data-region="helix" data-color="#FF6B6B">Helix</button>
+                            <button class="anatomy-btn" data-region="anti-helix" data-color="#4ECDC4">Anti-Helix</button>
+                            <button class="anatomy-btn" data-region="concha-cymba" data-color="#45B7D1">Concha (Cymba)</button>
+                            <button class="anatomy-btn" data-region="concha-cavum" data-color="#96CEB4">Concha (Cavum)</button>
+                            <button class="anatomy-btn" data-region="tragus" data-color="#FFEAA7">Tragus</button>
+                            <button class="anatomy-btn" data-region="anti-tragus" data-color="#DFE6E9">Anti-Tragus</button>
+                        </div>
+                        <div class="anatomy-category">
+                            <h4>Kanal Bölgeleri</h4>
+                            <button class="anatomy-btn" data-region="aperture" data-color="#A29BFE">Aperture (Kanal Girişi)</button>
+                            <button class="anatomy-btn" data-region="canal" data-color="#FD79A8">Canal (Kulak Kanalı)</button>
+                            <button class="anatomy-btn" data-region="first-bend" data-color="#FDCB6E">First Bend</button>
+                            <button class="anatomy-btn" data-region="second-bend" data-color="#E17055">Second Bend</button>
+                        </div>
+                        <div class="anatomy-category">
+                            <h4>Diğer Yapılar</h4>
+                            <button class="anatomy-btn" data-region="crus-helix" data-color="#74B9FF">Crus of Helix</button>
+                            <button class="anatomy-btn" data-region="lobule" data-color="#A29BFE">Lobule (Kulak Memesi)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h2>🔧 İşaretleme Araçları</h2>
+                    <div class="tools-grid">
+                        <button id="polygonTool" class="tool-btn active">
+                            <span>🔷</span>
+                            <span>Polygon</span>
+                        </button>
+                        <button id="pointTool" class="tool-btn">
+                            <span>📍</span>
+                            <span>Nokta</span>
+                        </button>
+                        <button id="errorTool" class="tool-btn error-tool">
+                            <span>❌</span>
+                            <span>Hata İşaretle</span>
+                        </button>
+                        <button id="clearTool" class="tool-btn">
+                            <span>🗑️</span>
+                            <span>Temizle</span>
+                        </button>
+                    </div>
+                    <div class="tool-options">
+                        <label>
+                            <input type="checkbox" id="showLabels" checked>
+                            Etiketleri Göster
+                        </label>
+                        <label>
+                            <input type="range" id="opacitySlider" min="0" max="100" value="50">
+                            Şeffaflık: <span id="opacityValue">50%</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h2>💾 Veri Yönetimi</h2>
+                    <div class="data-actions">
+                        <button id="saveBtn" class="btn btn-success">
+                            <span>💾 Etiketleri Kaydet (JSON)</span>
+                        </button>
+                        <button id="loadBtn" class="btn btn-info">
+                            <span>📂 Etiketleri Yükle</span>
+                        </button>
+                        <input type="file" id="jsonUpload" accept=".json" style="display: none;">
+                        <button id="exportBtn" class="btn btn-warning">
+                            <span>📊 Rapor Oluştur</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orta Panel: Canvas ve Görsel -->
+            <div class="center-panel">
+                <div class="canvas-container">
+                    <canvas id="mainCanvas"></canvas>
+                    <div id="canvasPlaceholder" class="canvas-placeholder">
+                        <div class="placeholder-content">
+                            <span class="placeholder-icon">🖼️</span>
+                            <p>Kulak kalıbı görseli yükleyin</p>
+                            <p class="placeholder-hint">Sol panelden "Kulak Kalıbı Görseli Yükle" butonuna tıklayın</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="canvasControls" class="canvas-controls" style="display: none;">
+                    <button id="zoomIn">🔍+</button>
+                    <button id="zoomOut">🔍-</button>
+                    <button id="resetZoom">↻</button>
+                    <span id="zoomLevel">100%</span>
+                </div>
+            </div>
+
+            <!-- Sağ Panel: Etiket Listesi ve İstatistikler -->
+            <div class="right-panel">
+                <div class="tool-section">
+                    <h2>📋 Etiketlenmiş Bölgeler</h2>
+                    <div id="annotationsList" class="annotations-list">
+                        <p class="empty-state">Henüz etiketlenmiş bölge yok</p>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h2>⚠️ Hata İşaretleri</h2>
+                    <div id="errorsList" class="errors-list">
+                        <p class="empty-state">Henüz hata işareti yok</p>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h2>📊 İstatistikler</h2>
+                    <div id="statistics" class="statistics">
+                        <div class="stat-item">
+                            <span class="stat-label">Toplam Bölge:</span>
+                            <span class="stat-value" id="totalRegions">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Hata Sayısı:</span>
+                            <span class="stat-value" id="totalErrors">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Tamamlanma:</span>
+                            <span class="stat-value" id="completionRate">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h2>📖 Anatomik Referans</h2>
+                    <div id="anatomyReference" class="anatomy-reference">
+                        <p>Bir anatomik bölge seçin veya bir işaret üzerine gelin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Etiket Düzenleme -->
+    <div id="annotationModal" class="modal">
+        <div class="modal-content">
+            <h3>✏️ Etiket Bilgileri</h3>
+            <div class="modal-body">
+                <label>
+                    Bölge Adı:
+                    <input type="text" id="annotationName" readonly>
+                </label>
+                <label>
+                    Notlar:
+                    <textarea id="annotationNotes" rows="3" placeholder="Bu bölge hakkında notlar ekleyin..."></textarea>
+                </label>
+                <label>
+                    <input type="checkbox" id="annotationIsCorrect" checked>
+                    Bu etiketleme doğru
+                </label>
+                <label>
+                    Güven Skoru:
+                    <input type="range" id="confidenceScore" min="0" max="100" value="100">
+                    <span id="confidenceValue">100%</span>
+                </label>
+            </div>
+            <div class="modal-footer">
+                <button id="modalSave" class="btn btn-success">Kaydet</button>
+                <button id="modalDelete" class="btn btn-danger">Sil</button>
+                <button id="modalCancel" class="btn">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
