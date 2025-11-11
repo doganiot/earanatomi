@@ -85,14 +85,17 @@ const anatomyDefinitions = {
     }
 };
 
-// Canvas ve DOM Elementleri
-const canvas = document.getElementById('mainCanvas');
-const ctx = canvas.getContext('2d');
-const placeholder = document.getElementById('canvasPlaceholder');
-const canvasControls = document.getElementById('canvasControls');
+// Canvas ve DOM Elementleri - DOMContentLoaded sonrası atanacak
+let canvas, ctx, placeholder, canvasControls;
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
+    // DOM elementlerini seç
+    canvas = document.getElementById('mainCanvas');
+    ctx = canvas.getContext('2d');
+    placeholder = document.getElementById('canvasPlaceholder');
+    canvasControls = document.getElementById('canvasControls');
+
     initializeEventListeners();
     updateUI();
 });
