@@ -102,12 +102,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Event Listeners
 function initializeEventListeners() {
-    // Image Upload
+    // Mode Switcher (2D/3D)
+    document.getElementById('mode2D').addEventListener('click', () => switchMode('2D'));
+    document.getElementById('mode3D').addEventListener('click', () => switchMode('3D'));
+
+    // File Upload
     document.getElementById('uploadBtn').addEventListener('click', () => {
-        document.getElementById('imageUpload').click();
+        if (state3D.mode === '2D') {
+            document.getElementById('imageUpload').click();
+        } else {
+            document.getElementById('modelUpload').click();
+        }
     });
 
     document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
+    document.getElementById('modelUpload').addEventListener('change', handleModelUpload);
 
     // Anatomy Buttons
     document.querySelectorAll('.anatomy-btn').forEach(btn => {
@@ -198,6 +207,22 @@ function handleImageUpload(e) {
         img.src = event.target.result;
     };
     reader.readAsDataURL(file);
+}
+
+// Model Upload Handler
+function handleModelUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+
+    if (fileExtension === 'stl') {
+        loadSTLModel(file);
+    } else if (fileExtension === 'obj') {
+        loadOBJModel(file);
+    } else {
+        alert('Desteklenmeyen dosya formatı! Lütfen STL veya OBJ dosyası yükleyin.');
+    }
 }
 
 function setupCanvas(img) {

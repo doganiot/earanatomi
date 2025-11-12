@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kulak Kalıbı Anatomik Bölge Tespiti</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Three.js for 3D Support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
     <div class="container">
@@ -25,13 +30,18 @@
             <!-- Sol Panel: Araçlar ve Kontroller -->
             <div class="left-panel">
                 <div class="tool-section">
-                    <h2>📁 Görsel Yükle</h2>
+                    <h2>📁 Dosya Yükle</h2>
+                    <div class="mode-selector">
+                        <button id="mode2D" class="mode-btn active">2D Görsel</button>
+                        <button id="mode3D" class="mode-btn">3D Model</button>
+                    </div>
                     <div class="upload-area">
                         <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                        <input type="file" id="modelUpload" accept=".stl,.obj" style="display: none;">
                         <button id="uploadBtn" class="btn btn-primary">
-                            <span>📤 Kulak Kalıbı Görseli Yükle</span>
+                            <span id="uploadBtnText">📤 Kulak Kalıbı Görseli Yükle</span>
                         </button>
-                        <div id="imageInfo" class="image-info"></div>
+                        <div id="fileInfo" class="image-info"></div>
                     </div>
                 </div>
 
@@ -113,13 +123,25 @@
 
             <!-- Orta Panel: Canvas ve Görsel -->
             <div class="center-panel">
-                <div class="canvas-container">
+                <!-- 2D Canvas Container -->
+                <div id="canvas2DContainer" class="canvas-container">
                     <canvas id="mainCanvas"></canvas>
                     <div id="canvasPlaceholder" class="canvas-placeholder">
                         <div class="placeholder-content">
                             <span class="placeholder-icon">🖼️</span>
                             <p>Kulak kalıbı görseli yükleyin</p>
                             <p class="placeholder-hint">Sol panelden "Kulak Kalıbı Görseli Yükle" butonuna tıklayın</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 3D Viewer Container -->
+                <div id="viewer3DContainer" class="viewer-container" style="display: none;">
+                    <div id="viewer3D"></div>
+                    <div id="viewer3DPlaceholder" class="canvas-placeholder">
+                        <div class="placeholder-content">
+                            <span class="placeholder-icon">🎲</span>
+                            <p>3D Kulak Kalıbı Modeli Yükleyin</p>
+                            <p class="placeholder-hint">STL veya OBJ formatında model yükleyin</p>
                         </div>
                     </div>
                 </div>
@@ -206,6 +228,7 @@
         </div>
     </div>
 
+    <script src="app3d.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
